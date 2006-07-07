@@ -1,5 +1,4 @@
 package Email::Thread;
-# $Id: Thread.pm,v 1.1 2004/12/29 22:22:26 cwest Exp $
 use strict;
 
 use vars qw[$VERSION];
