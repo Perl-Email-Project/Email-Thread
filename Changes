@@ -1,0 +1,20 @@
+
+# ChangeLog for Email::Thread
+
+---
+version: 0.68
+date:    11 Dec 2003
+changes:
+    - Uses Richard's new header method.
+
+---
+version: 0.66
+date:    11 Apr 2003
+changes:
+    - Works better with EU::MM 6.10+
+
+---
+version: 0.65
+date:    11 Apr 2003
+changes:
+    - Initial release.
