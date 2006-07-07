@@ -1,104 +1,104 @@
 package Email::Thread;
-use strict;
 
-use vars qw[$VERSION];
-$VERSION = '1.00';
+=head1 NAME
 
-use Email::Simple;
-use Email::Address;
-use Email::MessageID;
-use base qw[Class::Accessor::Fast];
-__PACKAGE__->mk_accessors(qw[messages rootset]);
+Email::Thread - Use JWZ's mail threading algorithm with Email::Simple objects
 
-sub thread {
-    my ($self) = @_;
-    my $table    = $self->{id_table} = {};
-    my $children = $self->{children_table} = {};
-    my $subjects = $self->{subject_table} = {};
+=cut
 
-    foreach my $msg ( @{$self->messages} ) {
-        my $mid  = $self->_get_mid($msg);
-        my @refs = $self->_get_refs($msg);
-        my $container = $self->_get_container($mid);
-        unless ( $container->message ) {
-            $container->message($msg);
-            $container->references([map $self->_get_container($_), @refs]);
-            if ( @refs ) {
-                my $parent = $container->references->[-1];
-                $container->parent($parent);
-                $self->_add_child($mid, $parent);
-            }
-        }
-    }
-    
-    $self->_round_children;
-    my @rootset = map    {(!$_->message && @{$_->children} == 1) ? $_->children->[0] : $_ }
-                  map    {$self->_group_subjects($_) || ()}
-                  grep   {!$_->parent || (!$_->message && !@{$_->children})}
-                  values %{$table};
-    $self->_round_children;
+use Mail::Thread;
+use vars qw( @ISA $VERSION );
+@ISA = qw( Mail::Thread );
+$VERSION = '0.68';
 
-    $self->rootset(\@rootset);
+sub _get_hdr {
+    my ($class, $msg, $hdr) = @_;
+    $msg->header($hdr);
 }
 
-sub _round_children {
-    my ($self) = @_;
-    my $children = $self->{children_table};
-    foreach my $parent ( keys %{$children} ) {
-        my $container = $self->_get_container($parent);
-        $container->children([
-          map $self->_get_container($_), @{$children->{$parent}}
-        ]);
-    }
-}
+sub _container_class { "Email::Thread::Container" }
 
-sub _get_mid {
-    my ($self, $msg) = @_;
-    my ($mid) = Email::Address->parse($msg->header('Message-ID'));
-    return $mid ? $mid->address : Email::MessageID->new->address;
-}
+package Email::Thread::Container;
 
-sub _get_refs {
-    my ($self, $msg) = @_;
-    return map $_->address,
-               Email::Address->parse($msg->header('References')),
-               (Email::Address->parse($msg->header('In-Reply-To')))[0];
-}
+use vars qw( @ISA $VERSION );
+@ISA = qw( Mail::Thread::Container );
+$VERSION = $Email::Thread::VERSION;
 
-sub _get_container {
-    my ($self, $mid) = @_;
-    return $self->{id_table}->{$mid}
-      ||= Email::Thread::Message->new({message_id => $mid, children => []});
-}
-
-sub _add_child {
-    my ($self, $child_mid, $parent) = @_;
-    my $children = $self->{children_table}->{$parent->message_id} ||= [];
-    push @{$children}, $child_mid;
-}
-
-sub _group_subjects {
-    my ($self, $container) = @_;
-    my $subject;
-    if ( $container->message ) {
-        $subject = $container->message->header('Subject');
-    } else {
-        foreach my $child ( @{$container->children} ) {
-            last if $subject = $child->message->header('Subject');
-        }
-    }
-    $subject =~ s/^(?:\s*Re(?:\[\d+\])?:\s*)+//gi;
-    my $root = $self->{subject_table}->{$subject} ||= $container;
-    return $container if $root == $container;
-    $self->_add_child($container->message_id, $root);
-    $container->parent($root);
-    return;
-}
-
-package Email::Thread::Message;
-use base qw[Class::Accessor::Fast];
-__PACKAGE__->mk_accessors(qw[message message_id children references parent]);
+sub header  { eval { $_[0]->message->header($_[1]) } }
 
 1;
-
 __END__
+
+=head1 SYNOPSIS
+
+    use Email::Thread;
+    my $threader = new Email::Thread (@messages);
+
+    $threader->thread;
+
+    dump_em($_,0) for $threader->rootset;
+
+    sub dump_em {
+        my ($self, $level) = @_;
+        debug (' \\-> ' x $level);
+        if ($self->message) {
+            print $self->message->head->get("Subject") , "\n";
+        } else {
+            print "[ Message $self not available ]\n";
+        }
+        dump_em($self->child, $level+1) if $self->child;
+        dump_em($self->next, $level) if $self->next;
+    }
+
+=head1 DESCRIPTION
+
+Strictly speaking, this doesn't really need L<Email::Simple> objects.
+It just needs an object that responds to the same API. At the time of
+writing the list of classes with the Email::Simple API comprises just
+Email::Simple.
+
+Due to how it's implemented, its API is an exact clone of
+L<Mail::Thread>.  Please see that module's documentation for API
+details. Just mentally substitute C<Email::Thread> everywhere you see
+C<Mail::Thread> and C<Email::Thread::Container> where you see
+C<Mail::Thread::Container>.
+
+=head1 THANKS
+
+Simon Cozens (SIMON) for encouraging me to release it, and for
+Email::Simple and Mail::Thread.
+
+Richard Clamp (RCLAMP) for the header patch.
+
+=head1 SUPPORT
+
+Support for this module is provided via the CPAN RT system. This means,
+if you have a problem, go to the URL below, or email the email
+address below:
+
+    http://perl.dellah.org/rt/emailthread
+    bug-email-thread@rt.cpan.org
+
+This makes it much easier for me to track things and thus means
+your problem is less likely to be neglected.
+
+=head1 LICENCE AND COPYRIGHT
+
+Copyright E<copy> Iain Truskett, 2003. All rights reserved.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+The full text of the licences can be found in the F<Artistic> and
+F<COPYING> files included with this module.
+
+=head1 AUTHOR
+
+Iain Truskett <spoon@cpan.org>
+
+=head1 SEE ALSO
+
+L<perl>, L<Mail::Thread>, L<Email::Simple>
+
+=cut
+
