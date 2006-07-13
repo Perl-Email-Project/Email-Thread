@@ -1,16 +1,7 @@
-____________________________________________________________________________
-[   303] By: iain                                  on 2003/12/11  11:12:13
-        Log: - Richard's new method.
-	   ! Changes lib/Email/Thread.pm
-____________________________________________________________________________
-[   255] By: iain                                  on 2003/04/11  23:07:51
-        Log: - 0.66
-	   ! Changes lib/Email/Thread.pm
-____________________________________________________________________________
-[   254] By: iain                                  on 2003/04/11  22:33:41
-        Log: - Fixed version numbering.
-	   ! lib/Email/Thread.pm
-____________________________________________________________________________
-[   253] By: iain                                  on 2003/04/11  22:32:01
-        Log: - Initial version.
-	   + Changes lib/Email/Thread.pm t/basic.t
+
+0.70	2006-07-11
+      fix bug in documentation
+
+0.68  2003-12-10
+      Richard's new method.
+
