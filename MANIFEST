@@ -1,6 +1,5 @@
 Artistic
 AUTHORS
-ChangeLog
 Changes
 COPYING
 CREDITS
@@ -10,7 +9,8 @@ LICENSE
 Makefile.PL
 MANIFEST
 MANIFEST.SKIP
-META.yml
 README
 t/99pod.t
 t/basic.t
+t/pod.t
+t/pod-coverage.t
