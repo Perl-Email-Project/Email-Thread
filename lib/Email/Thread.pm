@@ -25,7 +25,7 @@ use vars qw( @ISA $VERSION );
 @ISA = qw( Mail::Thread::Container );
 $VERSION = $Email::Thread::VERSION;
 
-sub header  { eval { $_[0]->message->header($_[1]) } }
+sub header { eval { $_[0]->message->header($_[1]) } }
 
 1;
 __END__
