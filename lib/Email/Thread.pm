@@ -1,6 +1,12 @@
 package Email::Thread;
 use strict;
 
+=head1 NAME
+
+Email::Thread - organize a collection of messages by thread
+
+=cut
+
 use vars qw[$VERSION];
 $VERSION = '1.00';
 

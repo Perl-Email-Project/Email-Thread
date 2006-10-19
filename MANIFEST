@@ -11,8 +11,6 @@ LICENSE
 Makefile.PL
 MANIFEST
 MANIFEST.SKIP
-META.yml
 README
 SIGNATURE
-t/99pod.t
-t/basic.t
+t/thread.t
