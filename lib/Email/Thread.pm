@@ -93,9 +93,13 @@ it under the same terms as Perl itself.
 The full text of the licences can be found in the F<Artistic> and
 F<COPYING> files included with this module.
 
-=head1 AUTHOR
+=head1 AUTHORS
 
 Iain Truskett <spoon@cpan.org>
+
+Richard Clamp (RCLAMP)
+
+Simon Cozens (SIMON)
 
 =head1 SEE ALSO
 

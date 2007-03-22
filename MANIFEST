@@ -1,14 +1,8 @@
-Artistic
-AUTHORS
 Changes
-COPYING
-CREDITS
-INSTALL
 lib/Email/Thread.pm
 LICENSE
 Makefile.PL
 MANIFEST
-MANIFEST.SKIP
 README
 t/99pod.t
 t/basic.t
