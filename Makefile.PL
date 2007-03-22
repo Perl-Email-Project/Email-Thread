@@ -2,7 +2,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
   NAME                => 'Email::Thread',
   VERSION_FROM        => 'lib/Email/Thread.pm',
-  (eval { ExtUtils::MakeMaker->VERSION(6.21) } ? (LICENSE => 'perl'), : ()),
+  (eval { ExtUtils::MakeMaker->VERSION(6.21) } ? (LICENSE => 'perl') : ()),
   PREREQ_PM => {
     'Mail::Thread' => '2.4',
     'Test::More' => '0.47',
