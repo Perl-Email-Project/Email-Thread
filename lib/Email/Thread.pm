@@ -1,16 +1,9 @@
-package Email::Thread;
-
-=head1 NAME
-
-Email::Thread - Use JWZ's mail threading algorithm with Email::Simple objects
-
-=cut
-
-use Mail::Thread;
 use strict;
-use vars qw( @ISA $VERSION );
-@ISA = qw( Mail::Thread );
-$VERSION = '0.711';
+use warnings;
+package Email::Thread;
+# ABSTRACT: Use JWZ's mail threading algorithm with Email::Simple objects
+
+use parent 'Mail::Thread';
 
 sub _get_hdr {
     my ($class, $msg, $hdr) = @_;
@@ -20,10 +13,7 @@ sub _get_hdr {
 sub _container_class { "Email::Thread::Container" }
 
 package Email::Thread::Container;
-
-use vars qw( @ISA $VERSION );
-@ISA = qw( Mail::Thread::Container );
-$VERSION = $Email::Thread::VERSION;
+use parent -norequire, 'Mail::Thread::Container';
 
 sub header { eval { $_[0]->message->header($_[1]) } }
 
@@ -64,34 +54,12 @@ details. Just mentally substitute C<Email::Thread> everywhere you see
 C<Mail::Thread> and C<Email::Thread::Container> where you see
 C<Mail::Thread::Container>.
 
-=head1 PERL EMAIL PROJECT
-
-This module is maintained by the Perl Email Project.
-
-L<http://emailproject.perl.org/wiki/Email::Thread>
-
-=head1 SUPPORT
-
-Support for this module is provided via the CPAN RT system at
-L<http://rt.cpan.org/>
-
-=head1 LICENCE AND COPYRIGHT
-
-Copyright E<copy> Iain Truskett, 2003. All rights reserved.
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
 =head1 THANKS
 
 Simon Cozens (SIMON) for encouraging me to release it, and for
 Email::Simple and Mail::Thread.
 
 Richard Clamp (RCLAMP) for the header patch.
-
-=head1 AUTHORS
-
-Iain Truskett <spoon@cpan.org>
 
 =head1 SEE ALSO
 
